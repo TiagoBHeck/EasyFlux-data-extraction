@@ -34,6 +34,9 @@ ServiceAccount/
 *.manifest
 *.spec
 
+# Service keys
+*.json
+
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
