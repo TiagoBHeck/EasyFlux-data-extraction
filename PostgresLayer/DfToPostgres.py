@@ -45,7 +45,7 @@ class DfToPostgres():
         """__init__
 
         Args:
-            df (pd.DataFrame): Bacen SGS dataframe
+            
         """
         self.env = load_dotenv()                 
         self.host = os.getenv('HOST')
@@ -66,7 +66,8 @@ class DfToPostgres():
     
     
     def prepare_df_to_staging(self, df:pd.DataFrame) -> pd.DataFrame:
-        """_summary_
+        """Split the dataframe given in two different dataframes. One for actual figures 
+        and another for budget figures.
 
         Args:
             df (pd.DataFrame): 
@@ -84,19 +85,15 @@ class DfToPostgres():
         """ Create the engine to connect to Postgres database and insert the dataframe lines
 
         Args:
-            df (pd.DataFrame): Bacen SGS dataframe
+            df (pd.DataFrame)
 
         Returns:
             int | None: Number os rows affected
         """                 
-        '''engine = create_engine(
-          f'postgresql+psycopg2://{self.user}:{self.password}@{self.host}:{self.port}/{database}',
-            connect_args={'options': '-csearch_path={}'.format(self.schema)}
-        )   '''   
         engine = create_engine(
-          f'postgresql+psycopg2://tiagobratzheck:tiagobratzheck@localhost:5432/EasyFlux',
-            connect_args={'options': '-csearch_path={}'.format('staging')}
-        )       
+          f'postgresql+psycopg2://{self.user}:{self.password}@{self.host}:{self.port}/{self.database}',
+            connect_args={'options': '-csearch_path={}'.format(self.schema)}
+        )        
         try:
             result = df.to_sql(table, engine, if_exists='replace')
             return result

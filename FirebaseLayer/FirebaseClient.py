@@ -1,17 +1,60 @@
+""" Class for extracting data from Firebase
+
+The referred class allows you to extract data from the Firebase collection and prepares 
+the data structure in a dataframe for subsequent processing.
+
+This script requires that `sqlalchemy`, `pandas` and `firebase_admin` be installed within the Python
+environment you are running this script in.
+"""
+
 import firebase_admin
 import pandas as pd
 from firebase_admin import credentials, firestore
 
 
 class FirebaseClient():
+    """
+      A class to create a connection instance with Firebase
+
+      ...
+
+      Attributes
+      ----------
+      cred : Any
+          Firebase database credentials.
+      initializer : Any
+          Firebase admin module to init the application that connects to database.
+      db : Any
+          Firestore database object.
+      
+      Methods
+      -------
+      get_collection(collection:str)
+          returns a list of entries retrieved from firestore database  
+      format_dataframe(df:pd.DataFram)
+          create the dataframe from the given list.  
+    """
   
     def __init__(self):
-        self.cred = credentials.Certificate(r"ServiceAccount\pl-easyflux-35b6b-firebase-adminsdk-hr3mq-5dadc4259e.json")
+        """__init__
+
+        Args:
+            
+        """
+        self.cred = credentials.Certificate({"service account key here"})
         self.initializer = firebase_admin.initialize_app(self.cred)
         self.db = firestore.client()
 
 
     def get_collection(self, collection: str) -> list:
+        """Returns a list of entries retrieved from firestore database.
+
+        Args:
+            collection:str 
+
+        Returns:
+            list 
+        """
         doc_list = []       
       
         docs = (
@@ -34,8 +77,15 @@ class FirebaseClient():
        
       
       
-    def format_dataframe(self, doc_list:list) -> list:
-               
+    def format_dataframe(self, doc_list:list) -> pd.DataFrame:
+        """Create the dataframe from the given list.
+
+        Args:
+            doc_list:list 
+
+        Returns:
+            pd.DataFrame
+        """               
         return pd.DataFrame.from_dict(doc_list)
             
 
